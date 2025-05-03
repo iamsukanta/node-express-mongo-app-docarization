@@ -1,6 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const http = require('http');
+const debug = require('debug');
+const morgan = require('morgan');
 
 //Model
 const User = require('./models/User');
@@ -9,6 +12,7 @@ const User = require('./models/User');
 dotenv.config();
 const app = express();
 
+app.use(morgan('combined'));
 //Middleware
 app.use(express.json())
 
@@ -54,5 +58,49 @@ app.get('/users-list', async (req, res) => {
   
 
 // Start Server
+const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port11: ${PORT}`));
+server.listen(PORT);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof PORT === 'string'
+    ? 'Pipe ' + PORT
+    : 'Port ' + PORT;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+  console.log('Server Running on http://localhost:'+ PORT);
+}
