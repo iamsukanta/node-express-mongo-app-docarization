@@ -50,6 +50,10 @@ jobs:
           cd /var/www/docker_test/node-express-mongo-app-docarization
           git pull origin main
           export IMAGE_TAG=${{ steps.vars.outputs.TAG }}
-          echo "IMAGE_TAG=$IMAGE_TAG" > .env
+          
+          grep -q "^IMAGE_TAG=" .env.prod && \
+          sed -i "s/^IMAGE_TAG=.*/IMAGE_TAG=$IMAGE_TAG/" .env.prod || \
+          echo "IMAGE_TAG=$IMAGE_TAG" >> .env.prod
+
           docker-compose down
           docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
