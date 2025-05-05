@@ -48,20 +48,13 @@ jobs:
         port: ${{ env.port }}
         script: |
           cd /var/www/docker_test/node-express-mongo-app-docarization
-          log_info "📥 Pulling latest code from Git..."
-          git pull origin main || { log_error "Failed to pull from git"; exit 1; }
-
+          git pull origin main
           export IMAGE_TAG=${{ steps.vars.outputs.TAG }}
-          log_info "🔧 Updating .env.prod file with IMAGE_TAG=$IMAGE_TAG..."
+          
           grep -q "^IMAGE_TAG=" .env.prod \
             && sed -i "s/^IMAGE_TAG=.*/IMAGE_TAG=$IMAGE_TAG/" .env.prod \
             || echo "IMAGE_TAG=$IMAGE_TAG" >> .env.prod
 
-          log_info "⏬ Stopping existing containers..."
-          docker-compose -f docker-compose.prod.yml --env-file .env.prod down || log_warn "Containers may already be down."
-
-          log_info "🚀 Starting containers with new image..."
+          docker-compose -f docker-compose.prod.yml --env-file .env.prod down
           docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
-
-          log_success "🎉 Deployment completed successfully!"
 
