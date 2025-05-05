@@ -60,7 +60,9 @@ app.get('/users-list', async (req, res) => {
 // Start Server
 const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
-server.listen(PORT);
+server.listen(5000, '0.0.0.0', () => {
+  console.log('Server running on port 5000');
+});
 server.on('error', onError);
 server.on('listening', onListening);
 
