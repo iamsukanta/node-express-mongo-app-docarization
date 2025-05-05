@@ -47,7 +47,7 @@ jobs:
         key: ${{ env.SSH_KEY }}
         port: ${{ env.port }}
         script: |
-          cd $VPS_PROJECT_DIR
+          cd /var/www/docker_test/node-express-mongo-app-docarization
           git pull origin main
           docker-compose pull
           docker-compose down
