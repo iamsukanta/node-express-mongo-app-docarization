@@ -29,7 +29,7 @@ app.post('/users', async (req, res) => {
     try {
         const newUser = new User({ name, email });
         await newUser.save();
-        res.status(201).json({ message: 'User saved', user: newUser });
+        res.status(201).json({ message: 'User successfully saved', user: newUser });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -61,7 +61,7 @@ app.get('/users-list', async (req, res) => {
 const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 server.listen(5000, '0.0.0.0', () => {
-  console.log('Server running on port 5000');
+  console.log('Server running on port: 5000');
 });
 server.on('error', onError);
 server.on('listening', onListening);
